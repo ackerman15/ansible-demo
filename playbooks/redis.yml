@@ -1,0 +1,30 @@
+---
+- hosts: redis
+  become: yes
+  gather_facts: no
+
+  tasks:
+    - name: ensure apt cache is up to date
+      apt: update_cache=yes cache_valid_time=86400
+
+    - name: ensure packages are installed
+      apt: name={{item}}
+      with_items:
+          - redis-server
+
+    - name: ensure redis listening on all interfaces
+      lineinfile:
+          path: /etc/redis/redis.conf
+          regexp: '^bind' 
+          line: 'bind 0.0.0.0'
+      notify: restart redis
+
+    - name: check if Redis is running
+      service: name=redis-server state=started
+    
+    - name: enable redis-server to survive reboot
+      service: name=redis-server enabled=yes
+
+  handlers:
+    - name: restart redis
+      service: name=redis-server state=restarted enabled=yes
