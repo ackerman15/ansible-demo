@@ -1,6 +1,7 @@
 ---
 - hosts: app
   become: true
+  gather_facts: false
   tasks:
     - name: install app components
       apt: name={{item}} state=present update_cache=yes
@@ -12,66 +13,59 @@
         - python-pip
         - python-virtualenv
         - supervisor
-
+# TODO:
+# Use git repo once it is squared away.  https://krzysztofzuraw.com/blog/2017/provisioning-django-application-ansible.html
+#
     - name: copy demo app source
       copy: src=wcdemo/perfdemo/ dest=/var/www/perfdemo mode=0755
 
-    - name: setup python virtualenv
-      pip: requirements=/var/www/perfdemo/requirements.txt virtualenv=/var/www/perfdemo/venv
+    - name: create virtual env
+      command: virtualenv /var/www/perfdemo/venv -p python2.7 creates="/var/www/perfdemo/venv"
 
-    - name: django migrate
-      django_manage:
-        command: makemigrations
-        app_path: /var/www/perfdemo/
-        pythonpath: /var/www/perfdemo/
+      #- name: activate venv
+      #- command: source /var/www/perfdemo/venv/bin/activate
+
+    - name: install requirements
+      pip:
+        requirements=/var/www/perfdemo/requirements.txt
+        executable=/var/www/perfdemo/venv/bin/pip
+
+        #- name: make manage.py executable
+      fi#- nale:
+        #- napath: /var/www/perfdemo/manage.py
+        #- namode: 0777
 
     - name: django migrate
       django_manage:
         command: migrate
+        virtualenv: /var/www/perfdemo/venv
         app_path: /var/www/perfdemo/
-        pythonpath: /var/www/perfdemo
 
-    - name: django migrate
+    - name: django init_db 
       django_manage:
-        command: initdb
+        command: init_db
+        virtualenv: /var/www/perfdemo/venv
         app_path: /var/www/perfdemo/
-        pythonpath: /var/www/perfdemo
+
+    - name: create celery beat file
+      copy: content="" dest=/var/www/perfdemo/celerybeat.pid mode=0777
 
     - name: copy supervisor conf
       copy: src=supervisor.conf dest=/etc/supervisor/conf.d mode=0755
-      notify:
-        - reread supervisord
-        - update supervisord
-        - restart supervisord
 
-  handlers:
-    - name: restart supervisord
-      sudo: yes
-      service: name=supervisor state=restarted
+    # Handlers weren't working for supervisor
+
+    - name: ensure supervisord started
+      service: name=supervisor state=started
      
     - name: reread supervisord
-      sudo: yes
       command: supervisorctl reread
       
     - name: update supervisord
-      sudo: yes
       command: supervisorctl update
-      #      notify: restart apache2
-      #
-      #    - name: setup python virtualenv
-      #      pip: requirements=/var/www/demo/requirements.txt virtualenv=/var/www/demo/.venv
-      #      notify: restart apache2
-      #
-      #    - name: deactivate default apache sites
-      #      file: path=/etc/apache2/sites-enabled/000-default.conf state=absent
-      #      notify: restart apache2
-      #
-      #    - name: activate demo apache site
-      #      file: src=/etc/apache2/sites-available/demo.conf dest=/etc/apache2/sites-enabled/demo.conf state=link
-      #      notify: restart apache2
-      #
-      #    handlers:
-      #      - name: restart apache2
-      #        service: name=apache2 state=restarted
-      #
-      #```
+
+    - name: ensure supervisord stopped
+      service: name=supervisor state=stopped
+     
+    - name: ensure supervisord started
+      service: name=supervisor state=started
