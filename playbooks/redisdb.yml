@@ -1,0 +1,14 @@
+---
+- hosts: redis
+  become: true
+  vars:
+    datadog_api_key: "061e1093f0ae55ede1304666cdda1e84"
+    datadog_checks:
+      redisdb:
+        init_config:
+        instances:
+          - host: localhost
+            port: 6379
+  roles:
+    - Datadog.datadog
+    - redisdb

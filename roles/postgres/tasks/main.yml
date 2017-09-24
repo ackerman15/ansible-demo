@@ -1,14 +1,18 @@
 ---
-- name: ensure apt cache is up to date
+- name: update apt cache
   apt: update_cache=yes cache_valid_time=86400
 
 - name: ensure packages are installed
-  apt: name={{item}}
+  apt: name={{item}} state=present
   with_items:
     - acl
     - libpq-dev
     - python-psycopg2
     - postgresql-9.3
+    - postgresql-contrib
+
+- name: ensure postgres is running
+  service: name=postgresql state=started
 
 - name: ensure postgres pg_hba is configured
   template: src=pg_hba.conf dest=/etc/postgresql/9.3/main/pg_hba.conf
@@ -24,14 +28,6 @@
 
 - name: ensure user has access to database
   postgresql_user: db={{dbname}} name={{dbuser}} password={{dbpassword}} priv=ALL
-  become_user: postgres
-
-- name: ensure user does not have unnecessary privilege
-  postgresql_user: name={{dbuser}} role_attr_flags=NOSUPERUSER,NOCREATEDB
-  become_user: postgres
-  
-- name: ensure no other user can access the database
-  postgresql_privs: db={{dbname}} role=PUBLIC type=database priv=ALL state=absent
   become_user: postgres
 
 - name: datadog postgres user

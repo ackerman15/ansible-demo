@@ -1,5 +1,5 @@
 ---
-- hosts: database
+- hosts: app
   become: true
   vars:
     dbname: wcdemo 
@@ -7,16 +7,10 @@
     dbpassword: wcdemo
     datadog_api_key: "061e1093f0ae55ede1304666cdda1e84"
     datadog_checks:
-      postgres:
+      gunicorn:
         init_config:
         instances:
-          - host: localhost
-            port: 5432
-            username: datadog
-            password: abc123
-            tags:
-              - test
-              - env:ans-demo
+          - proc_name: perfdemo
   roles:
-    - postgres
     - Datadog.datadog
+    - django
