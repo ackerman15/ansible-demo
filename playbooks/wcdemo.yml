@@ -1,16 +1,18 @@
 ---
+- hosts: all
+  gather_facts: true
 - hosts: app
   become: true
   vars:
-    dbname: wcdemo 
-    dbuser: wcdemo
-    dbpassword: wcdemo
-    datadog_api_key: "061e1093f0ae55ede1304666cdda1e84"
+    dbname: "{{ db_name }}"
+    dbuser: "{{ db_user }}"
+    dbpassword: "{{ db_pass }}"
+    datadog_api_key: "{{ datadog_api }}"
     datadog_checks:
       gunicorn:
         init_config:
         instances:
           - proc_name: perfdemo
   roles:
-    - Datadog.datadog
+      #- Datadog.datadog
     - django

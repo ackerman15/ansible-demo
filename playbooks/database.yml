@@ -2,18 +2,18 @@
 - hosts: database
   become: true
   vars:
-    dbname: wcdemo 
-    dbuser: wcdemo
-    dbpassword: wcdemo
-    datadog_api_key: "061e1093f0ae55ede1304666cdda1e84"
+    dbname: "{{ db_name }}"
+    dbuser: "{{ db_user }}"
+    dbpassword: "{{ db_pass }}"
+    datadog_api_key: "{{ datadog_api }}"
     datadog_checks:
       postgres:
         init_config:
         instances:
           - host: localhost
             port: 5432
-            username: datadog
-            password: abc123
+            username: "{{ agent_user }}"
+            password: "{{ agent_pass }}"
             tags:
               - test
               - env:ans-demo

@@ -2,6 +2,6 @@
 - hosts: all
   become: true
   gather_facts: true
-- include: database.yml
-- include: redisdb.yml
-- include: wcdemo.yml
+- import_playbook: database.yml
+- import_playbook: redisdb.yml
+- import_playbook: wcdemo.yml

@@ -28,6 +28,6 @@
   become_user: postgres
 
 - name: datadog postgres user
-  postgresql_user: db=postgres name=datadog password=abc123 priv=pg_stat_database:SELECT state=present
+  postgresql_user: db=postgres name={{ agent_user }} password={{ agent_pass }} priv=pg_stat_database:SELECT state=present
   become_user: postgres
 
