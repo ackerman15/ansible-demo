@@ -1,0 +1,8 @@
+---
+- hosts: app
+  gather_facts: true
+- hosts: loadbalancer
+  become: true
+  roles:
+    - nginx
+

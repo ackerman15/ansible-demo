@@ -1,0 +1,13 @@
+upstream {{ item.key }} {
+{% for server in groups.app %}
+  server {{ hostvars[server]['ansible_eth0']['ipv4']['address'] }}:{{ item.value.backend }};
+{% endfor %}
+}
+
+server {
+  listen {{ item.value.frontend }};
+
+  location / {
+    proxy_pass http://{{ item.key }};
+  }
+}

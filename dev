@@ -1,3 +1,12 @@
+[control]
+ec2-18-221-131-77.us-east-2.compute.amazonaws.com
+
+[proxy]
+ec2-52-15-95-111.us-east-2.compute.amazonaws.com
+
+[loadbalancer]
+ec2-18-220-13-77.us-east-2.compute.amazonaws.com
+
 [app]
 ec2-18-220-236-147.us-east-2.compute.amazonaws.com
 ec2-18-221-120-190.us-east-2.compute.amazonaws.com

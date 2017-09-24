@@ -1,0 +1,6 @@
+---
+  - hosts: all
+    gather_facts: false
+    tasks:
+      - name: install ssh key
+        local_action: "shell cat ~/.ssh/id_rsa.pub | ssh -i {{ pem_path }} -oStrictHostKeyChecking=no -l ubuntu ubuntu@{{ inventory_hostname }} 'cat >> .ssh/authorized_keys'"

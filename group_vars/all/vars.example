@@ -1,16 +1,15 @@
 # setup
-pem_path: "~/.ssh/bb-demo.pem"
+pem_path: "~/.ssh/my-key.pem"
 # app
 app_path: "/var/www/wcdemo/perfdemo"
 # settings.py
 app_url: "{{ hostvars[groups['loadbalancer'][0]]['ansible_eth0']['ipv4']['address'] }}"
 app_port: "80"
-django_secret: "=_c22@6n=x+cl^1#k=a)r=hw^jb@e33hsm62&x!ksnguuag)%9"
-req_multiple: "20"
+django_secret: "my_django_secret"
 # settings.py - db
 db_name: "wcdemo"
-db_user: "wcdemo"
-db_pass: "wcdemo"
+db_user: "wcdemo_user"
+db_pass: "top_secret"
 db_host: "{{ hostvars[groups['database'][0]]['ansible_eth0']['ipv4']['address'] }}"
 db_port: "5432"
 # settings.py - trace
@@ -24,6 +23,6 @@ trace_port: 8126
 redis_url: "redis://{{ hostvars[groups['redis'][0]]['ansible_eth0']['ipv4']['address'] }}"
 # postgres
 agent_user: "datadog"
-agent_pass: "abc123"
+agent_pass: "top_secret"
 # datadog
-datadog_api: "061e1093f0ae55ede1304666cdda1e84"
+datadog_api: "<datadog-api-key>"

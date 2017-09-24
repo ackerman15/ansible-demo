@@ -4,4 +4,5 @@
   gather_facts: true
 - import_playbook: database.yml
 - import_playbook: redisdb.yml
+- import_playbook: loadbalancer.yml
 - import_playbook: wcdemo.yml
