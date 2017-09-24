@@ -16,6 +16,9 @@
 - name: copy demo app source
   copy: src=wcdemo/perfdemo/ dest=/var/www/perfdemo mode=0755
 
+- name: copy settings.py
+  template: src=settings.py.j2 dest=/var/www/perfdemo/perfdemo/settings.py mode=0755
+
 - name: create virtual env
   command: virtualenv /var/www/perfdemo/venv -p python2.7 creates="/var/www/perfdemo/venv"
 

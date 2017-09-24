@@ -1,0 +1,19 @@
+# settings.py
+app_url: "127.0.0.1"
+app_port: "8000"
+django_secret: "=_c22@6n=x+cl^1#k=a)r=hw^jb@e33hsm62&x!ksnguuag)%9"
+# settings.py - db
+db_name: "wcdemo"
+db_user: "wcdemo"
+db_pass: "wcdemo"
+db_host: "172.31.7.97"  # TODO: Get from facts
+db_port: "5432"
+# settings.py - trace
+trace_service: "wcdemo"
+trace_db_prefix: "wdemo"
+trace_tag: "wcd"
+trace_enabled: True
+trace_hostname: "localhost"
+trace_port: 8126
+# settings.py - redis
+redis_url: "redis://172.31.0.219"  # TODO: Get from facts

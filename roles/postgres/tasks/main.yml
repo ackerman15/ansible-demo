@@ -11,9 +11,6 @@
     - postgresql-9.3
     - postgresql-contrib
 
-- name: ensure postgres is running
-  service: name=postgresql state=started
-
 - name: ensure postgres pg_hba is configured
   template: src=pg_hba.conf dest=/etc/postgresql/9.3/main/pg_hba.conf
   notify: restart postgres
